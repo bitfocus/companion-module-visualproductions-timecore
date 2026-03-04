@@ -17,6 +17,10 @@
 		"type": "git",
 		"url": "git+https://github.com/bitfocus/companion-module-visualproductions-timecore.git"
 	},
+	"engines": {
+		"node": ">=22.0.0",
+		"yarn": "4"
+	},
 	"dependencies": {
 		"@companion-module/base": "~1.13.6"
 	},

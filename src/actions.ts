@@ -112,8 +112,9 @@ export function setupActions(instance: TimecoreInstance): void {
 					type: 'textinput',
 					label: 'Timecode',
 					id: 'targetTimecode',
-					default: '12:00:00:00',
+					default: '00:00:00.0',
 					regex: instance.timecodeRegex,
+					description: 'Format: HH:MM:SS.ff',
 				},
 			],
 			callback: async (action) => {
@@ -173,8 +174,9 @@ export function setupActions(instance: TimecoreInstance): void {
 					type: 'textinput',
 					label: 'Time',
 					id: 'targetTime',
-					default: '12:00:00:00',
-					regex: instance.timecodeRegex,
+					default: '01:00:00.0',
+					description: 'Format: HH:MM:SS.t',
+					regex: instance.timerValueRegex,
 				},
 			],
 			callback: async (action) => {
