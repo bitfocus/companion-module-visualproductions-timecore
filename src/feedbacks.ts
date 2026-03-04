@@ -89,7 +89,7 @@ export function setupFeedbacks(instance: TimecoreInstance): void {
 				const source = (feedback.options.source as string) ?? 'smpte'
 				const key = RECEIVING_STATE_KEYS[source] ?? 'receivingSmpte'
 				const val = instance.state[key]
-				return typeof val === 'string' && val !== 'no'
+				return val === 'yes'
 			},
 		},
 	})

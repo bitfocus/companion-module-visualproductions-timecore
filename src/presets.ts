@@ -12,14 +12,12 @@ export function setupPresets(instance: TimecoreInstance): void {
 		gray: 0x4a4a4a,
 	}
 
-	const externalTimecodeSources: { id: string; label: string; variableId?: string }[] = [
-		{ id: 'smpte', label: 'SMPTE', variableId: 'tc_smpte' },
-		{ id: 'midi', label: 'MIDI', variableId: 'tc_mtc' },
-		{ id: 'artnet', label: 'Art-Net', variableId: 'tc_artnet' },
-		{ id: 'rtpmidi', label: 'RTP MIDI', variableId: 'tc_rtpmidi' },
-		{ id: 'sacn', label: 'sACN', variableId: 'receiving_sacn' },
-		{ id: 'tcp', label: 'TCP', variableId: 'receiving_tcp' },
-		{ id: 'udp', label: 'UDP', variableId: 'receiving_udp' },
+	// Sources that carry a timecode frame value
+	const externalTimecodeSources: { id: string; label: string; tcVariableId: string }[] = [
+		{ id: 'smpte', label: 'SMPTE', tcVariableId: 'tc_smpte' },
+		{ id: 'midi', label: 'MIDI', tcVariableId: 'tc_mtc' },
+		{ id: 'artnet', label: 'Art-Net', tcVariableId: 'tc_artnet' },
+		{ id: 'rtpmidi', label: 'RTP MIDI', tcVariableId: 'tc_rtpmidi' },
 	]
 	for (const source of externalTimecodeSources) {
 		presets[`external_tc_${source.id}`] = {
@@ -28,7 +26,7 @@ export function setupPresets(instance: TimecoreInstance): void {
 			name: source.label,
 			options: {},
 			style: {
-				text: `${source.label}\\n$(this:${source.variableId})`,
+				text: `${source.label}\\n$(this:${source.tcVariableId})`,
 				size: 12,
 				color: Color.white,
 				bgcolor: Color.gray,
@@ -38,10 +36,36 @@ export function setupPresets(instance: TimecoreInstance): void {
 				{
 					feedbackId: 'receiving',
 					options: { source: source.id },
-					style: {
-						bgcolor: Color.green,
-						color: Color.white,
-					},
+					style: { bgcolor: Color.green, color: Color.white },
+				},
+			],
+		}
+	}
+
+	// Sources that signal presence only (no timecode frame)
+	const receivingOnlySources: { id: string; label: string }[] = [
+		{ id: 'sacn', label: 'sACN' },
+		{ id: 'tcp', label: 'TCP' },
+		{ id: 'udp', label: 'UDP' },
+	]
+	for (const source of receivingOnlySources) {
+		presets[`external_tc_${source.id}`] = {
+			type: 'button',
+			category: 'External Timecode',
+			name: source.label,
+			options: {},
+			style: {
+				text: source.label,
+				size: 12,
+				color: Color.white,
+				bgcolor: Color.gray,
+			},
+			steps: [{ down: [], up: [] }],
+			feedbacks: [
+				{
+					feedbackId: 'receiving',
+					options: { source: source.id },
+					style: { bgcolor: Color.green, color: Color.white },
 				},
 			],
 		}
@@ -108,39 +132,39 @@ export function setupPresets(instance: TimecoreInstance): void {
 			name: 'Timer ' + i,
 			text: '',
 		}
-		for (const action of controlActions) {
-			presets[`timer_${i}_status`] = {
-				type: 'button',
-				category: 'Timers',
-				name: 'Timer ' + i + ' Status',
-				options: {},
-				style: {
-					text: 'Timer ' + i + '\\n$(this:timer_' + i + ')',
-					size: 12,
-					color: Color.white,
-					bgcolor: Color.black,
+		presets[`timer_${i}_status`] = {
+			type: 'button',
+			category: 'Timers',
+			name: 'Timer ' + i + ' Status',
+			options: {},
+			style: {
+				text: 'Timer ' + i + '\\n$(this:timer_' + i + ')',
+				size: 12,
+				color: Color.white,
+				bgcolor: Color.black,
+			},
+			steps: [
+				{
+					down: [],
+					up: [],
 				},
-				steps: [
-					{
-						down: [],
-						up: [],
+			],
+			feedbacks: [
+				{
+					feedbackId: 'timer_below',
+					options: {
+						timer: i,
+						timecode: '00:00:10.0',
 					},
-				],
-				feedbacks: [
-					{
-						feedbackId: 'timer_below',
-						options: {
-							timer: i,
-							timecode: '00:00:10.0',
-						},
-						style: {
-							bgcolor: Color.red,
-							color: Color.white,
-						},
+					style: {
+						bgcolor: Color.red,
+						color: Color.white,
 					},
-				],
-			}
+				},
+			],
+		}
 
+		for (const action of controlActions) {
 			presets[`timer_${i}_${action.id}`] = {
 				type: 'button',
 				category: 'Timers',

@@ -112,7 +112,7 @@ export function setupActions(instance: TimecoreInstance): void {
 					type: 'textinput',
 					label: 'Timecode',
 					id: 'targetTimecode',
-					default: '00:00:00.0',
+					default: '00:00:00.00',
 					regex: instance.timecodeRegex,
 					description: 'Format: HH:MM:SS.ff',
 				},

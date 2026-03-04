@@ -93,7 +93,7 @@ export class TimecoreInstance extends InstanceBase<ModuleConfig> {
 				this.log('info', 'Connected to TimeCore')
 			})
 			this.client.on('data', (data) => {
-				console.log(data)
+				this.log('debug', data.toString())
 			})
 		} else {
 			this.updateStatus(InstanceStatus.BadConfig, 'TimeCore IP or Port is missing')
@@ -122,7 +122,9 @@ export class TimecoreInstance extends InstanceBase<ModuleConfig> {
 
 	async fetchStatus(): Promise<void> {
 		try {
-			const res = await fetch(`http://${this.config.targetIp}/ajax/get/index/status`)
+			const res = await fetch(`http://${this.config.targetIp}/ajax/get/index/status`, {
+				signal: AbortSignal.timeout(3000),
+			})
 			const data = (await res.json()) as {
 				gen: { upt: string; upd: number }
 				tc: {
@@ -174,7 +176,9 @@ export class TimecoreInstance extends InstanceBase<ModuleConfig> {
 
 	async fetchTimers(): Promise<void> {
 		try {
-			const res = await fetch(`http://${this.config.targetIp}/ajax/get/monitor/timers`)
+			const res = await fetch(`http://${this.config.targetIp}/ajax/get/monitor/timers`, {
+				signal: AbortSignal.timeout(3000),
+			})
 			const data = (await res.json()) as { timers: string[] }
 
 			this.state.timers = [data.timers[0] ?? '', data.timers[1] ?? '', data.timers[2] ?? '', data.timers[3] ?? '']
@@ -199,13 +203,13 @@ export class TimecoreInstance extends InstanceBase<ModuleConfig> {
 			tc_artnet_fps: this.state.tcArtnetFps,
 			tc_rtpmidi: this.state.tcRtpmidiFrame,
 			tc_rtpmidi_fps: this.state.tcRtpmidiFps,
-			receiving_smpte: this.state.receivingSmpte === 'no' ? false : true,
-			receiving_midi: this.state.receivingMidi === 'no' ? false : true,
-			receiving_artnet: this.state.receivingArtnet === 'no' ? false : true,
-			receiving_rtpmidi: this.state.receivingRtpmidi === 'no' ? false : true,
-			receiving_sacn: this.state.receivingSacn === 'no' ? false : true,
-			receiving_tcp: this.state.receivingTcp === 'no' ? false : true,
-			receiving_udp: this.state.receivingUdp === 'no' ? false : true,
+			receiving_smpte: this.state.receivingSmpte === 'yes',
+			receiving_midi: this.state.receivingMidi === 'yes',
+			receiving_artnet: this.state.receivingArtnet === 'yes',
+			receiving_rtpmidi: this.state.receivingRtpmidi === 'yes',
+			receiving_sacn: this.state.receivingSacn === 'yes',
+			receiving_tcp: this.state.receivingTcp === 'yes',
+			receiving_udp: this.state.receivingUdp === 'yes',
 			timer_1: this.state.timers[0],
 			timer_2: this.state.timers[1],
 			timer_3: this.state.timers[2],
