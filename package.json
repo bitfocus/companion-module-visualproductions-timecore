@@ -1,24 +1,48 @@
 {
 	"name": "visualproductions-timecore",
-	"version": "1.0.0",
-	"main": "index.js",
-	"type": "module",
+	"version": "2.0.0",
+	"main": "dist/main.js",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1",
-		"format": "prettier -w ."
+		"postinstall": "husky",
+		"format": "prettier -w .",
+		"package": "run build && companion-module-build",
+		"build": "rimraf dist && run build:main",
+		"build:main": "tsc -p tsconfig.build.json",
+		"dev": "tsc -p tsconfig.build.json --watch",
+		"lint:raw": "eslint",
+		"lint": "run lint:raw ."
 	},
 	"license": "MIT",
-	"dependencies": {
-		"@companion-module/base": "~1.5.0",
-		"got": "^13.0.0",
-		"net": "^1.0.2"
-	},
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/bitfocus/companion-module-visualproductions-timecore.git"
 	},
-	"devDependencies": {
-		"@companion-module/tools": "^1.5.2"
+	"engines": {
+		"node": ">=22.0.0",
+		"yarn": "4"
 	},
-	"prettier": "@companion-module/tools/.prettierrc.json"
+	"dependencies": {
+		"@companion-module/base": "~1.13.6"
+	},
+	"devDependencies": {
+		"@companion-module/tools": "^2.7.1",
+		"@types/node": "^22.19.13",
+		"eslint": "^9.39.3",
+		"husky": "^9.1.7",
+		"lint-staged": "^16.3.0",
+		"prettier": "^3.8.1",
+		"rimraf": "^6.1.3",
+		"typescript": "~5.9.3",
+		"typescript-eslint": "^8.56.1"
+	},
+	"lint-staged": {
+		"*.{css,json,md,scss}": [
+			"prettier --write"
+		],
+		"*.{ts,tsx,js,jsx}": [
+			"yarn lint:raw --fix"
+		]
+	},
+	"prettier": "@companion-module/tools/.prettierrc.json",
+	"packageManager": "yarn@4.12.0"
 }

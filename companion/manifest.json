@@ -3,7 +3,7 @@
 	"name": "visualproductions-timecore",
 	"shortname": "timecore",
 	"description": "Module for controlling the Visual Productions Timecore device by sending commands over TCP",
-	"version": "1.0.0",
+	"version": "0.0.0",
 	"license": "MIT",
 	"repository": "git+https://github.com/bitfocus/companion-module-visualproductions-timecore.git",
 	"bugs": "https://github.com/bitfocus/companion-module-visualproductions-timecore/issues",
@@ -11,16 +11,20 @@
 		{
 			"name": "Leon Reucher",
 			"email": "leon.reucher@ultimate-technology.de"
+		},
+		{
+			"name": "Bryce Seifert",
+			"email": "bryce@bitfocus.io"
 		}
 	],
 	"legacyIds": [],
 	"runtime": {
-		"type": "node18",
+		"type": "node22",
 		"api": "nodejs-ipc",
 		"apiVersion": "0.0.0",
-		"entrypoint": "../index.js"
+		"entrypoint": "../dist/main.js"
 	},
 	"manufacturer": "Visual Productions",
 	"products": ["Timecore"],
-	"keywords": ["Timecore"]
+	"keywords": ["timecode", "timer", "clock"]
 }
