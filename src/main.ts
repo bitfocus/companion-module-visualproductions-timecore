@@ -166,7 +166,7 @@ export class TimecoreInstance extends InstanceBase<ModuleConfig> {
 			this.state.receivingUdp = data.receiving.u
 
 			this.updateVariables()
-			this.checkFeedbacks('timer_below')
+			this.checkFeedbacks()
 		} catch (_err) {
 			// Silently ignore fetch errors; last known values are preserved
 		}
@@ -189,15 +189,15 @@ export class TimecoreInstance extends InstanceBase<ModuleConfig> {
 	updateVariables(): void {
 		this.setVariableValues({
 			uptime: this.state.uptime,
-			tc_internal_frame: this.state.tcInternalFrame,
+			tc_internal: this.state.tcInternalFrame,
 			tc_internal_fps: this.state.tcInternalFps,
-			tc_smpte_frame: this.state.tcSmpteFrame,
+			tc_smpte: this.state.tcSmpteFrame,
 			tc_smpte_fps: this.state.tcSmpteFps,
-			tc_mtc_frame: this.state.tcMtcFrame,
+			tc_mtc: this.state.tcMtcFrame,
 			tc_mtc_fps: this.state.tcMtcFps,
-			tc_artnet_frame: this.state.tcArtnetFrame,
+			tc_artnet: this.state.tcArtnetFrame,
 			tc_artnet_fps: this.state.tcArtnetFps,
-			tc_rtpmidi_frame: this.state.tcRtpmidiFrame,
+			tc_rtpmidi: this.state.tcRtpmidiFrame,
 			tc_rtpmidi_fps: this.state.tcRtpmidiFps,
 			receiving_smpte: this.state.receivingSmpte === 'no' ? false : true,
 			receiving_midi: this.state.receivingMidi === 'no' ? false : true,

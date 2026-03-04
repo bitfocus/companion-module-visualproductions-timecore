@@ -1,6 +1,16 @@
 import { combineRgb } from '@companion-module/base'
 import { TimecoreInstance } from './main.js'
 
+const RECEIVING_STATE_KEYS: Record<string, keyof TimecoreInstance['state']> = {
+	smpte: 'receivingSmpte',
+	midi: 'receivingMidi',
+	artnet: 'receivingArtnet',
+	rtpmidi: 'receivingRtpmidi',
+	sacn: 'receivingSacn',
+	tcp: 'receivingTcp',
+	udp: 'receivingUdp',
+}
+
 /** Parse HH:MM:SS or HH:MM:SS.t timecode to total seconds */
 function timecodeToSeconds(tc: string): number | null {
 	const parts = tc.trim().split(/[:.]/)
@@ -51,6 +61,35 @@ export function setupFeedbacks(instance: TimecoreInstance): void {
 				const totalSeconds = timecodeToSeconds(val)
 				if (totalSeconds === null) return false
 				return totalSeconds < threshold
+			},
+		},
+		receiving: {
+			type: 'boolean',
+			name: 'Receiving',
+			description: 'Active when the selected source is receiving',
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Source',
+					id: 'source',
+					default: 'smpte',
+					choices: [
+						{ id: 'smpte', label: 'SMPTE' },
+						{ id: 'midi', label: 'MIDI' },
+						{ id: 'artnet', label: 'Art-Net' },
+						{ id: 'rtpmidi', label: 'RTP MIDI' },
+						{ id: 'sacn', label: 'sACN' },
+						{ id: 'tcp', label: 'TCP' },
+						{ id: 'udp', label: 'UDP' },
+					],
+				},
+			],
+			defaultStyle: { bgcolor: combineRgb(0, 153, 0), color: combineRgb(255, 255, 255) },
+			callback: (feedback) => {
+				const source = (feedback.options.source as string) ?? 'smpte'
+				const key = RECEIVING_STATE_KEYS[source] ?? 'receivingSmpte'
+				const val = instance.state[key]
+				return typeof val === 'string' && val !== 'no'
 			},
 		},
 	})
